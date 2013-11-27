@@ -1,0 +1,862 @@
+\part{Session}
+
+In computer science, in particular networking, a session\cite{session} is a semi-permanent interactive information interchange, also known as a dialogue, a conversation or a meeting, between two or more communicating devices, or between a computer and user (see Login session). A session is set up or established at a certain point in time, and torn down at a later point in time. An established communication session may involve more than one message in each direction. A session is typically, but not always, stateful, meaning that at least one of the communicating parts needs to save information about the session history in order to be able to communicate, as opposed to stateless communication, where the communication consists of independent requests with responses.
+
+An established session is the basic requirement to perform a connection-oriented communication. A session also is the basic step to transmit in connectionless communication modes. However any unidirectional transmission does not define a session.
+
+Communication sessions may be implemented as part of protocols and services at the application layer, at the session layer or at the transport layer in the OSI model.
+
+\begin{compactitem}
+\item Application layer examples:
+
+	\begin{compactitem}
+	\item HTTP sessions, which allow associating information with individual visitors
+	\item A telnet remote login session
+	\end{compactitem}
+
+\item Session layer example:
+
+	\begin{compactitem}
+	\item A Session Initiation Protocol (SIP) based Internet phone call
+	\end{compactitem}
+
+\item Transport layer example:
+	\begin{compactitem}
+	\item A TCP session, which is synonymous to a TCP virtual circuit, a TCP connection, or an established TCP socket.
+	\end{compactitem}
+
+\end{compactitem}
+
+
+An HTTP session is a sequence of network request-response transactions. An HTTP client initiates a request by establishing a Transmission Control Protocol (TCP) connection to a particular port on a server (typically port 80; see List of TCP and UDP port numbers). An HTTP server listening on that port waits for a client's request message. Upon receiving the request, the server sends back a status line, such as "HTTP/1.1 200 OK", and a message of its own. The body of this message is typically the requested resource, although an error message or other information may also be returned.
+
+
+In the case of transport protocols that do not implement a formal session layer (e.g., UDP) or where sessions at the session layer are generally very short-lived (e.g., HTTP), sessions are maintained by a higher level program using a method defined in the data being exchanged. For example, an HTTP exchange between a browser and a remote host may include an HTTP cookie which identifies state, such as a unique session ID, information about the user's preferences or authorization level.
+
+HTTP/1.0 was thought to only allow a single request and response during one Web/HTTP Session. However a workaround was created by David Hostettler Wain in 1996 such that it was possible to use session IDs to allow multiple phase Web Transaction Processing (TP) Systems (in ICL nomenclature), with the first implementation being called Deity. Protocol version HTTP/1.1 further improved by completing the Common Gateway Interface (CGI) making it easier to maintain the Web Session and supporting HTTP cookies and file uploads.
+
+Most client-server sessions are maintained by the transport layer - a single connection for a single session. However each transaction phase of a Web/HTTP session creates a separate connection. Maintaining session continuity between phases required a session ID. The session ID is embedded within the <A HREF> or <FORM> links of dynamic web pages so that it is passed back to the CGI. CGI then uses the session ID to ensure session continuity between transaction phases. One advantage of one connection-per-phase is that it works well over low bandwidth (modem) connections. Deity used a sessionID, screenID and actionID to simplify the design of multiple phase sessions.
+
+在计算机科学领域来说，尤其是在网络领域，会话（session）是一种持久网络协议，在用户（或用户代理）端和服务器端之间创建关联，从而起到交换数据包的作用机制，session在网络协议（例如telnet或FTP）中是非常重要的部分。
+
+
+在不包含会话层（例如UDP）或者是无法长时间驻留会话层（例如HTTP）的传输协议中，会话的维持需要依靠在传输数据中的高级别程序。例如，在浏览器和远程主机之间的HTTP传输中，HTTP cookie就会被用来包含一些相关的信息，例如session ID，参数和权限信息等。
+
+
+
+\chapter{Login session}
+
+
+In computing, a login session is the period of activity between a user logging in and logging out of a (multi-user) system.
+
+
+
+On Unix and Unix-like operating systems, a login session takes one of two main forms:
+
+
+
+\begin{compactitem}
+\item When a textual user interface is used, a login session is represented as a kernel session — a collection of process groups with the logout action managed by a session leader.
+\item Where an X display manager is employed, a login session is considered to be the lifetime of a designated user process that the display manager invokes.
+\end{compactitem}
+
+On Windows NT-based systems, login sessions are maintained by the kernel and control of them is within the purview of the Local Security Authority Subsystem Service (LSA). winlogon responds to the secure attention key, requests the LSA to create login sessions on login, and terminates all of the processes belonging to a login session on logout.
+
+
+
+
+
+\chapter{Software implementation}
+
+
+TCP sessions are typically implemented in software using child processes and/or multithreading, where a new process or thread is created when the computer establishes or joins a session. HTTP sessions are typically not implemented using one thread per session, but by means of a database with information about the state of each session. The advantage with multiple processes or threads is relaxed complexity of the software, since each thread is an instance with its own history and encapsulated variables. The disadvantage is large overhead in terms of system resources, and that the session may be interrupted if the system is restarted.
+
+When a client may connect to any server in a cluster of servers, a special problem is encountered in maintaining consistency when the servers must maintain session state. The client must either be directed to the same server for the duration of the session, or the servers must transmit server-side session information via a shared file system or database. Otherwise, the client may reconnect to a different server than the one it started the session with, which will cause problems when the new server does not have access to the stored state of the old one.
+
+TCP 会话通常是通过子进程和（或）多线程在软件中实现的，当计算机创建或者加入一个会话时即创建一个新的进程或线程。HTTP 会话通常不会针对每个会话创建一个线程，而是由一个储存每个会话状态信息的数据库实现的。使用多线程或者多进程的方式带来的好处是降低了软件的复杂度，因为每个线程或者进程都单独具备自己的历史信息并且封装了变量。而这样做的劣势是带来了大量系统资源的开销，而且会话会因为系统的重启而被打断。
+
+当客户端在多个服务器调取数据时，保持会话状态的一致性是需要注意的，客户端需用同时保持和某一个主机的连接，或者多个服务器端需要共享一个储存会话信息的文件系统或者数据库。否则，当用户在一个新的而不是一开始保存会话信息的主机上提交访问请求的时候，主机会因为无法获知原来主机的会话的访问状态而产生问题。
+
+
+
+
+\chapter{Server side web sessions}
+
+
+Server-side sessions are handy and efficient, but can become difficult to handle in conjunction with load-balancing/high-availability systems and are not usable at all in some embedded systems with no storage. The load-balancing problem can be solved by using shared storage or by applying forced peering between each client and a single server in the cluster, although this can compromise system efficiency and load distribution.
+
+A method of using server-side sessions in systems without mass-storage is to reserve a portion of RAM for storage of session data. This method is applicable for servers with a limited number of clients (e.g. router or access point with infrequent or disallowed access to more than one client at a time). ...
+
+服务器端的会话是快速而高效的，但是在负载均衡系统和高速应用系统中的使用会比较麻烦，而在没有储存能力的系统上更是无法使用。在负载均衡系统中可以通过共享储存或者设立独立的存储服务器来解决，这需要根据系统的效率和载入分布的需求情况。
+
+使用缓存存储会话数据是一种不需要储存介质的解决方案。这种方式适合于处理少量数据的客户端操作（例如路由或网络桥接器对多个客户端产生的请求）。但是这种方式会消耗较多内存空间。
+
+
+
+\chapter{Client side web sessions}
+
+
+Client-side sessions use cookies and cryptographic techniques to maintain state without storing as much data on the server. When presenting a dynamic web page, the server sends the current state data to the client (web browser) in the form of a cookie. The client saves the cookie in memory or on disk. With each successive request, the client sends the cookie back to the server, and the server uses the data to "remember" the state of the application for that specific client and generate an appropriate response.
+
+This mechanism may work well in some contexts; however, data stored on the client is vulnerable to tampering by the user or by software that has access to the client computer. To use client-side sessions where confidentiality and integrity are required, the following must be guaranteed:
+
+\begin{compactenum}
+\item Confidentiality: Nothing apart from the server should be able to interpret session data.
+\item Data integrity: Nothing apart from the server should manipulate session data (accidentally or maliciously).
+\item Authenticity: Nothing apart from the server should be able to initiate valid sessions.
+\end{compactenum}
+
+To accomplish this, the server needs to encrypt the session data before sending it to the client, and modification of such information by any other party should be prevented via cryptographic means.
+
+Transmitting state back and forth with every request is only practical when the size of the cookie is small. In essence, client-side sessions trade server disk space for the extra bandwidth that each web request will require. Moreover, web browsers limit the number and size of cookies that may be stored by a web site. To improve efficiency and allow for more session data, the server may compress the data before creating the cookie, decompressing it later when the cookie is returned by the client.
+
+
+客户端会话使用了Cookie和加密技术来完成上面提到的数据储存需求。
+
+
+
+\chapter{Session token}
+
+
+A session token is a unique identifier that is generated and sent from a server to a client to identify the current interaction session. The client usually stores and sends the token as an HTTP cookie and/or sends it as a parameter in GET or POST queries. The reason to use session tokens is that the client only has to handle the identifier—all session data is stored on the server (usually in a database, to which the client does not have direct access) linked to that identifier. Examples of the names that some programming languages use when naming their HTTP cookie include JSESSIONID (JSP), PHPSESSID (PHP), CGISESSID (CGI), and ASPSESSIONID (ASP).
+
+\section{Session ID}
+
+In computer science, a session identifier, session ID\cite{session_id} or session token is a piece of data that is used in network communications (often over HTTP) to identify a session, a series of related message exchanges. Session identifiers become necessary in cases where the communications infrastructure uses a stateless protocol such as HTTP. For example, a buyer who visits a seller's site wants to collect a number of articles in a virtual shopping cart and then finalize the shopping by going to the site's checkout page. This typically involves an ongoing communication where several webpages are requested by the client and sent back to them by the server. In such a situation, it is vital to keep track of the current state of the shopper's cart, and a session ID is one way to achieve that goal.
+
+
+A session ID is typically granted to a visitor on his first visit to a site. It is different from a user ID in that sessions are typically short-lived (they expire after a preset time of inactivity which may be minutes or hours) and may become invalid after a certain goal has been met (for example, once the buyer has finalized his order, he cannot use the same session ID to add more items).
+
+As session IDs are often used to identify a user that has logged into a website, they can be used by an attacker to hijack the session and obtain potential privileges. A session ID is often a long, randomly generated string to decrease the probability of obtaining a valid one by means of a brute-force search. Many servers perform additional verification of the client, in case the attacker has obtained the session ID. Locking a session ID to the client's IP address is a simple and effective measure as long as the attacker cannot connect to the server from the same address.
+
+A session token is a unique identifier, usually in the form of a hash generated by a hash function that is generated and sent from a server to a client to identify the current interaction session. The client usually stores and sends the token as an HTTP cookie and/or sends it as a parameter in GET or POST queries. The reason to use session tokens is that the client only has to handle the identifier (a small piece of data which is otherwise meaningless and thus presents no security risk) - all session data is stored on the server (usually in a database, to which the client does not have direct access) linked to that identifier. There are many drawbacks of session ID and it may not be enough to fulfill some developer requirements. Many developers use other logic to identify the session.
+
+
+Examples of the names that some programming languages use when naming their cookie include JSESSIONID (JEE), PHPSESSID (PHP), and ASPSESSIONID (Microsoft ASP).
+
+
+
+\chapter{Session management}
+
+
+In human–computer interaction, session management is the process of keeping track of a user's activity across sessions of interaction with the computer system.
+
+Typical session management tasks in a desktop environment include keeping track of which applications are open and which documents each application has opened, so that the same state can be restored when the user logs out and logs in later. For a website, session management might involve requiring the user to re-login if the session has expired (i.e., a certain time limit has passed without user activity). It is also used to store information on the server-side between HTTP requests.
+
+
+
+
+\section{Desktop session management}
+
+
+A desktop session manager is a program that can save and restore desktop sessions. A desktop session is all the windows currently running and their current content. Session management on Linux-based systems is provided by X session manager. On Microsoft Windows systems, no session manager is included in the system, but session management can be provided by third-party applications like twinsplay.
+
+
+
+
+
+
+\section{Browser session management}
+
+Session management is particularly useful in a web browser where a user can save all open pages and settings and restore them at a later date. To help recover from a system or application crash, pages and settings can also be restored on next run. Google Chrome, Mozilla Firefox, Internet Explorer, OmniWeb and Opera are examples of web browsers that support session management. Session management is often managed through the application of cookies.
+
+
+
+
+
+\section{Web server session management}
+
+Hypertext Transfer Protocol (HTTP) is stateless: a client computer running a web browser must establish a new Transmission Control Protocol (TCP) network connection to the web server with each new HTTP GET or POST request. The web server, therefore, cannot rely on an established TCP network connection for longer than a single HTTP GET or POST operation. Session management is the technique used by the web developer to make the stateless HTTP protocol support session state. For example, once a user has been authenticated to the web server, the user's next HTTP request (GET or POST) should not cause the web server to ask for the user's account and password again. For a discussion of the methods used to accomplish this see HTTP cookie and Session ID.
+
+[ The world's first session management system was called Deity, invented and developed by David Hostettler Wain in 1996. Using a web browser for text \& image applications was deemed preferable to installing bespoke MS-Windows clients or X Window servers, especially for low bandwidth connections. However HTTP/1.0 initially did not support all the functionality for Web Sessions. However DHW created a workaround using Session IDs which worked on NCSA Mosaic and Netscape with httpd versions 1.0. The whole point of Session IDs is that the entire session state did not need to be passed to/from the client/server via HTTP cookies on each transaction phase. ]
+
+The session information is stored on the web server using the session identifier Session ID generated as a result of the first (sometimes the first authenticated) request from the end user running a web browser. The "storage" of Session IDs and the associated session data (user name, account number, etc.) on the web server is accomplished using a variety of techniques including, but not limited to, local memory, flat files, and databases.
+
+In situations where multiple web servers must share knowledge of session state (as is typical in a cluster environment) session information must be shared between the cluster nodes that are running web server software. Methods for sharing session state between nodes in a cluster include: multicasting session information to member nodes (see JGroups for one example of this technique), sharing session information with a partner node using distributed shared memory or memory virtualization, sharing session information between nodes using network sockets, storing session information on a shared file system such as the network file system or the global file system, or storing the session information outside the cluster in a database.
+
+If session information is considered transient, volatile data that is not required for non-repudiation of transactions and does not contain data that is subject to compliance auditing (in the U.S. for example, see the Health Insurance Portability and Accountability Act and the Sarbanes-Oxley Act for examples of two laws that necessitate compliance auditing) then any method of storing session information can be used. However, if session information is subject to audit compliance, consideration should be given to the method used for session storage, replication, and clustering.
+
+In a service-oriented architecture, Simple Object Access Protocol or SOAP messages constructed with Extensible Markup Language (XML) messages can be used by consumer applications to cause web servers to create sessions.
+
+
+在动态页面完成解析的时候，储存在会话中的变量会被压缩后传输给客户端的Cookie。此时完全依靠客户端的文件系统来保存这些数据（或者内存）。
+
+在每一个成功的请求中，Cookie中都保存有服务器端用户所具有的身份证明（PHP中的session id）或者更为完整的数据。
+
+虽然这样的机制可以保存数据的前后关联，但是必须要保障数据的完整性和安全性。
+
+
+
+\section{Session Management over SMS}
+
+
+Just as HTTP is a stateless protocol, so is SMS. As SMS became interoperable across rival networks in 1999,[2] and text messaging started its ascent towards becoming a ubiquitous global form of communication, various enterprises became interested in using the SMS channel for commercial purposes. Initial services did not require session management since they were only one-way communications (for example, in 2000, the first mobile news service was delivered via SMS in Finland). Today, these applications are referred to as application-to-peer (A2P) messaging as distinct from peer-to-peer (P2P) messaging. The development of interactive enterprise applications required session management, but because SMS is a stateless protocol as defined by the GSM standards, early implementations were controlled client-side by having the end-users enter commands and service identifiers manually. In 2001, a Finnish inventor, Jukka Salonen, introduced a means of maintaining the state of asynchronous sessions from an operator-independent server using what was termed the Dynamic Dialogue Matrix (DDM). Managing sessions from a remote server removes complexity for the end user and enables solutions to scale more easily in a manner that is backwards compatible to existing mobile phones. Managing sessions from the server-side also enabled improved user-authentication and eliminates the need to transmit sensitive data over insecure wireless networks. Finnair became the first airline to use the DDM system and method for authenticated mobile check-in to flights.
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Session tracking methods}
+
+
+
+\chapter{Session fixation}
+
+In computer network security, session fixation\cite{session_fixation} attacks attempt to exploit the vulnerability of a system which allows one person to fixate (set) another person's session identifier (SID). Most session fixation attacks are web based, and most rely on session identifiers being accepted from URLs (query string) or POST data.
+
+
+
+
+\section{Attack scenarios}
+
+
+Alice has an account at the bank http://unsafe.example.com/. Unfortunately, Alice is not very security savvy.
+
+Mallory is out to get Alice's money from the bank.
+
+Alice has a reasonable level of trust in Mallory, and will visit links Mallory sends her.
+
+
+
+\subsection{A simple attack scenario}
+
+Straightforward scenario:
+
+\begin{compactenum}
+\item Mallory has determined that http://unsafe.example.com/ accepts any session identifier, accepts session identifiers from query strings and has no security validation. http://unsafe.example.com/ is thus not secure.
+\item Mallory sends Alice an e-mail: "Hey, check this out, there is a cool new account summary feature on our bank, http://unsafe.example.com/?SID=I\_WILL\_KNOW\_THE\_SID". Mallory is trying to fixate the SID to I\_WILL\_KNOW\_THE\_SID.
+\item Alice is interested and visits http://unsafe.example.com/?SID=I\_WILL\_KNOW\_THE\_SID. The usual log-on screen pops up, and Alice logs on.
+\item Mallory visits http://unsafe.example.com/?SID=I\_WILL\_KNOW\_THE\_SID and now has unlimited access to Alice's account.
+\end{compactenum}
+
+
+
+
+
+
+
+\subsection{Attack using server generated SID}
+
+A misconception is that servers which only accept server generated session identifiers are safe from fixation. This is false.
+
+Scenario:
+
+\begin{compactenum}
+\item Mallory visits http://vulnerable.example.com/ and checks which SID is returned. For example, the server may respond: Set-Cookie: SID=0D6441FEA4496C2.
+\item Mallory is now able to send Alice an e-mail: "Check out this new cool feature on our bank, http://vulnerable.example.com/?SID=0D6441FEA4496C2."
+\item Alice logs on, with fixated session identifier SID=0D6441FEA4496C2.
+\item Mallory visits http://vulnerable.example.com/?SID=0D6441FEA4496C2 and now has unlimited access to Alice's account.
+\end{compactenum}
+
+
+
+
+
+
+
+
+\subsection{Attacks using cross-site cooking}
+
+
+
+Another session fixation attack, cross-site cooking, exploits browser vulnerabilities. This allows the site http://evil.example.org/ to store cookies in Alice's browser in the cookie domain of another server http://good.example.com/, which is trusted. This attack can succeed even when there is no vulnerability within http://good.example.com/, because http://good.example.com/ may assume that browser cookie management is secure.
+
+Scenario:
+
+
+\begin{compactenum}
+\item Mallory sends Alice an e-mail: "Hey, check out this cool site, http://evil.example.org/".
+\item Alice visits http://evil.example.org/, which sets the cookie SID with the value I\_WILL\_KNOW\_THE\_SID into the domain of http://good.example.com/.
+\item Alice doesn't know that the SID was fixed to Mallory's content, and logs into http://good.example.com/ later in the day. Mallory can now use her account using the fixated session identifier.
+
+\end{compactenum}
+
+For security reasons, modern browsers do not allow setting cross-domain cookies.
+
+
+
+
+
+
+
+
+
+\subsection{Attacks using cross-subdomain cooking}
+
+
+This is like cross-site cooking, except that it does not rely on browser vulnerabilities. Rather, it relies on the fact that wildcard cookies can be set by one subdomain that affect other subdomains.
+
+Scenario:
+
+\begin{compactenum}
+\item A web site www.example.com hands out subdomains to untrusted third parties
+One such party, Mallory, who now controls evil.example.com, lures Alice to her site
+\item A visit to evil.example.com sets a session cookie with the domain .example.com on Alice's browser
+\item When Alice visits www.example.com, this cookie will be sent with the request, as the specs for cookies states, and Alice will have the session specified by Mallory's cookie.
+\item If Alice now logs on, Mallory can use her account.
+\end{compactenum}
+
+
+Each of these attack scenarios has resulted in Cross-calation, where Mallory has successfully gained access to the functions and data normally reserved for Alice.
+
+An alternate attack scenario does not require Alice to log into a site. Rather, simply by fixing the session, Mallory may be able to spy on Alice and abuse the data she enters. For example, Mallory may use the above attacks to give Alice her own authenticated session—so Alice will start using the site with all the authentication of Mallory. If Alice decides to purchase something on this site and enters her credit card details, Mallory might be able to retrieve that data (or other confidential data) by looking through the historical data stored for the account.
+
+
+
+
+
+
+
+
+\section{Do not accept session identifiers from GET / POST variables}
+
+Session identifiers in URL (query string, GET variables) or POST variables are not recommended as they simplify this attack – it is easy to make links or forms which set GET / POST variables.
+
+Additionally, session identifiers (SIDs) in query strings enable other risk and attack scenarios;
+
+\begin{compactitem}
+\item The SID is leaked to others servers through the Referrer
+\item The SID is leaked to other people as users cut \& paste "interesting links" from the address bar into chat, forums, communities, etc.
+\item The SID is stored in many places (browser history log, web server log, proxy logs, ...)
+\end{compactitem}
+
+
+Note: Cookies are shared between tabs and popped up browser windows. If your system requires to be hit with the same domain (www.example.com?code=site1 and www.example.com?code=site2 ), cookies may conflict with one another between tabs.
+
+It may be required to send the session identifier on the URL in order to overcome this limitation. If possible use site1.example.com or site2.example.com so there is no domain conflicts in the cookies. This may incur costs with extra SSL certificates.
+
+This behavior can be seen on many sites by opening another tab and trying to do side by side search results. One of the sessions will become unusable.
+
+
+\subsection{Best solution: Identity Confirmation}
+
+This attack can be largely avoided by changing the session ID when users log in. If every "important" request requires the user to be authenticated with ("logged into") the site, an attacker would need to know the id of the victim's log-in session. When the victim visits the link with the fixed session id, however, they will need to log into their account in order to do anything "important" as themselves. At this point, their session id will change and the attacker will not be able to do anything "important".
+
+A similar technique can be used to solve the phishing problem. If the user protects their account with two passwords, then it can be solved to a great extent.
+
+This technique is also useful against cross-site request forgery attacks.
+
+
+
+
+\subsection{Solution: Store session identifiers in HTTP cookies}
+
+The session identifier on most modern systems is stored by default in an HTTP cookie, which has a moderate level of security as long as the session system disregards GET/POST values.[citation needed] However, this solution is vulnerable to cross-site request forgery.
+
+
+
+
+
+\subsection{Solution: Utilize SSL / TLS Session identifier}
+
+When enabling HTTPS security, some systems allow applications to obtain the SSL / TLS session identifier. Use of the SSL/TLS session identifier is very secure, but many web development languages do not provide robust built-in functionality for this.
+
+SSL/TLS session identifiers may be suitable only for critical applications, such as those on large financial sites, due to the size of the systems. This issue, however, is rarely debated even in security forums.
+
+\section{Regenerate SID on each request}
+
+A countermeasure against session fixation is to generate a new session identifier (SID) on each request. If this is done, then even though an attacker may trick a user into accepting a known SID, the SID will be invalid when the attacker attempts to re-use the SID. Implementation of such a system is simple, as demonstrated by the following:
+
+\begin{compactitem}
+\item Get previous Session Identifier OLD\_SID from HTTP request.
+\item If OLD\_SID is null, empty, or no session with SID=OLD\_SID exists, create a new session.
+\item Generate new session identifier NEW\_SID with a secure random number generator.
+\item Let session be identified by SID=NEW\_SID (and no longer by SID=OLD\_SID)
+\item Transmit new SID to client.
+\end{compactitem}
+
+Example:
+
+If Mallory successfully tricks Alice into visiting http://victim.example.com/?SID=I\_KNOW\_THE\_SID, this HTTP request is sent to victim.example.com:
+
+\begin{lstlisting}[language=bash]
+GET /?SID=I_KNOW_THE_SID HTTP/1.1
+Host: victim.example.com
+\end{lstlisting}
+
+victim.example.com accepts SID=I\_KNOW\_THE\_SID, which is bad. However, victim.example.com is secure because it performs session regeneration. victim.example.com gets the following response:
+
+\begin{lstlisting}[language=bash]
+HTTP/1.1 200 OK
+Set-Cookie: SID=3134998145AB331F
+\end{lstlisting}
+
+Alice will now use SID=3134998145AB331F which is unknown to Mallory, and SID=I\_KNOW\_THE\_SID is invalid. Mallory is thus unsuccessful in the session fixation attempt.
+
+Unfortunately session regeneration is not always possible. Problems are known to occur when third-party software such as ActiveX or Java Applets are used, and when browser plugins communicate with the server. Third-party software could cause logouts, or the session could be split into two separate sessions.
+
+If the implementation of sessions includes transmitting the SID through GET or POST variables, then this might also render the "back" button in most browsers unusable, as the user would the be using and older, invalid, session identifier from a previous request.
+
+
+\section{Accept only server-generated SIDs}
+
+One way to improve security is not to accept session identifiers that were not generated by the server. However, as noted above, this does not prevent all session fixation attacks.
+
+\begin{lstlisting}[language=PHP]
+if (!isset($_SESSION['SERVER_GENERATED_SID'])) {
+   session_destroy(); // destroy all data in session
+}
+session_regenerate_id(); // generate a new session identifier
+$_SESSION['SERVER_GENERATED_SID'] = true;
+\end{lstlisting}
+
+
+
+
+\section{Logout function}
+
+A logout function is useful as it allows users to indicate that a session should not allow further requests. Thus attacks can only be effective while a session is active. Note that the following code performs no Cross-site request forgery checks, potentially allowing an attacker to force users to log out of the web application.
+
+\begin{lstlisting}[language=PHP]
+if ( logout )
+   session_destroy(); // destroy all data in session
+\end{lstlisting}
+
+
+
+\section{Time-out old SIDs}
+
+This defense is simple to implement and has the advantage of providing a measure of protection against unauthorized users accessing an authorized user's account by using a machine that may have been left unattended.
+
+Store a session variable containing a time stamp of the last access made by that SID. When that SID is used again, compare the current timestamp with the one stored in the session. If the difference is greater than a predefined number, say 5 minutes, destroy the session. Otherwise, update the session variable with the current timestamp.
+
+
+
+
+\section{Destroy session if Referrer is suspicious}
+
+
+When visiting a page, most browsers will set the Referrer – the page that contained the link that you followed to get to this page.
+
+When the user is logged into a site that is not likely to be linked to from outside that site (e.g., banking websites, or webmail), and the site is not the kind of site where users would remain logged in for any great length of time, the Referrer should be from that site. Any other Referrer should be considered suspicious. However, if the originating request is from a HTTPS page, then the referrer will be stripped, so you cannot depend on this security system.
+
+For example, http://vulnerable.example.com/ could employ the following security check:
+
+\begin{lstlisting}[language=PHP]
+if (strpos($_SERVER['HTTP_REFERER'], 'http://vulnerable.example.com/') !== 0) {
+   session_destroy(); // destroy all data in session
+}
+session_regenerate_id(); // generate a new session identifier
+\end{lstlisting}
+
+
+
+\section{Verify that additional information is consistent throughout session}
+
+One way to further improve security is to ensure that the user appears to be the same end user (client). This makes it a bit harder to perform session fixation and other attacks.
+
+As more and more networks begin to conform to RFC 3704 and other anti-spoofing practices, the IP address becomes more reliable as a "same source" identifier. Therefore, the security of a web site can be improved by verifying that the source IP is consistent throughout a session.
+
+This could be performed in this manner:
+
+\begin{lstlisting}[language=PHP]
+if($_SERVER['REMOTE_ADDR'] != $_SESSION['PREV_REMOTEADDR']) {
+   session_destroy(); // destroy all data in session
+}
+session_regenerate_id(); // generate a new session identifier
+$_SESSION['PREV_REMOTEADDR'] = $_SERVER['REMOTE_ADDR'];
+\end{lstlisting}
+
+However, there are some points to consider before employing this approach.
+
+\begin{compactitem}
+\item Several users may share one IP. It is not uncommon for an entire building to share one IP using NAT.
+\item One user may have an inconsistent IP. This is true for users behind proxies (such as AOL customers). It is also true for some mobile/roaming users, as well as users that are behind load balanced Internet connections. Users with IPv6 Privacy Extensions enabled may also change their IPv6 privacy addresses at any time.
+
+\end{compactitem}
+
+For some sites, the added security outweighs the lack of convenience, and for others it does not.
+
+
+
+
+\subsection{User Agent}
+
+Browsers identify themselves by "User-Agent" HTTP headers. This header does not normally change during use; it would be extremely suspicious if that were to happen. A web application might make use of User-Agent detection in attempt to prevent malicious users from stealing sessions. This however is trivial to bypass, as an attacker can easily capture the victim's user-agent with their own site and then spoof it during the attack. This proposed security system is relying on Security through obscurity.
+
+\begin{lstlisting}[language=PHP]
+if ($_SERVER['HTTP_USER_AGENT'] != $_SESSION['PREV_USERAGENT']) {
+   session_destroy(); // destroy all data in session
+}
+session_regenerate_id(); // generate a new session identifier
+$_SESSION['PREV_USERAGENT'] = $_SERVER['HTTP_USER_AGENT'];
+\end{lstlisting}
+
+However, there are some points to consider before employing this approach.
+
+\begin{compactitem}
+\item Several users may have same browser User Agent in Internet café.
+\item Several users may have same default browser (ex: Internet Explorer 6 in Windows XP SP3 or mini browser in mobile phone).
+
+\end{compactitem}
+
+But User Agent may change legally in few cases. Following examples are the same users. For example MSIE may change the UA string based on compatibility mode:
+
+
+
+\begin{compactitem}
+\item Mozilla/5.0 (Linux; U; Android 2.2; en-us; DROID2 Build/VZW) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1 854X480 motorola DROID2
+\item Mozilla/5.0 (Linux; U; Android 2.2; en-us; DROID2 Build/VZW) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1 480X854 motorola DROID2
+\item Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)
+\item Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)
+\item Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2) Gecko/20100115 Firefox/3.6 (FlipboardProxy/0.0.5; +http://flipboard.com/browserproxy)
+\item Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2) Gecko/20100115 Firefox/3.6 (FlipboardProxy/1.1; +http://flipboard.com/browserproxy)
+\end{compactitem}
+
+
+
+
+\section{Defense in Depth}
+
+
+
+Defense in depth is to combine several countermeasures. The idea is simple: if one obstacle is trivial to overcome, several obstacles could be very hard to overcome.
+
+A Defence in Depth strategy could involve:
+
+\begin{compactitem}
+\item Enable HTTPS (to protect against other problems)
+\item Correct configuration (do not accept external SIDs, set time-out, etc.)
+\item Perform session\_regeneration, support log-out, etc.
+\end{compactitem}
+
+It should be noted that HTTP referers are not passed with SSL.
+
+The following PHP script demonstrates several such countermeasures combined in a Defence in Depth manner:
+
+\begin{lstlisting}[language=PHP]
+if (isset($_GET['LOGOUT']) ||
+    $_SERVER['REMOTE_ADDR'] !== $_SESSION['PREV_REMOTEADDR'] ||
+    $_SERVER['HTTP_USER_AGENT'] !== $_SESSION['PREV_USERAGENT'])
+  session_destroy();
+ 
+session_regenerate_id(); // generate a new session identifier
+ 
+$_SESSION['PREV_USERAGENT'] = $_SERVER['HTTP_USER_AGENT'];
+$_SESSION['PREV_REMOTEADDR'] = $_SERVER['REMOTE_ADDR'];
+\end{lstlisting}
+
+Note that this code checks the current REMOTE\_ADDR (the user's IP address) and User-agent against the REMOTE\_ADDR and User-agent of the previous request. This might be inconvenient for some sites as discussed above.
+
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Session poisoning}
+
+Session poisoning (also referred to as "Session data pollution" and "Session modification") is a method to exploit insufficient input validation within a server application. Typically a server application that is vulnerable to this type of exploit will copy user input into session variables.
+
+The underlying vulnerability is a state management problem: shared state, race condition, ambiguity in use or plain unprotected modifications of state values.
+
+Session poisoning has been demonstrated in server environments where different, non-malicious applications (scripts) share the same session states but where usage differ, causing ambiguity and race conditions.
+
+Session poisoning has been demonstrated in scenarios where attacker is able to introduce malicious scripts into the server environment, which is possible if attacker and victim share a web host.
+
+
+\section{Origin}
+
+
+Session poisoning was first discussed as a (potentially new) vulnerability class in Full disclosure mailinglist. Alla Bezroutchko inquired if "Session data pollution vulnerabilities in web applications" was a new problem in January 2006. However, this was an old vulnerability previously noted by others: "this is a classic state management issue" - Yvan Boily; "This is not new" - /someone.
+
+Earlier examples of these vulnerabilities can be found in major security resources/archives such as Bugtraq, e.g.
+
+\begin{compactitem}
+\item July 2001 Serious security hole in Mambo Site Server version 3.0.X by Ismael Peinado Palomo of reverseonline.com
+\item September 2005 PHP Session modification by unknow (from uw-team) and adam\_i
+\end{compactitem}
+
+Session pollution has also been covered in some articles, such as PHP Session Security, Przemek Sobstel, 2007 (accessed September 22, 2007).
+
+
+
+\section{Trivial attack scenario}
+
+
+An example code vulnerable to this problem is:
+
+\begin{lstlisting}[language=PHP]
+Session("Login") = Request("login")
+Session("Username") = Request("username")
+\end{lstlisting}
+
+Which is subject to trivial attacks such as
+
+\begin{lstlisting}[language=bash]
+vulnerable.asp?login=YES&username=Mary
+\end{lstlisting}
+
+
+This problem could exist in software where
+
+\begin{compactitem}
+\item User submits username / password to logon.asp
+\item If password for Mary checks outs, logon.asp forwards to vulnerable.asp?login=YES\&username=Mary
+
+\end{compactitem}
+
+
+The problem is that \texttt{vulnerable.asp} is designed on the assumption that the page is only accessed in a non-malicious way. Anyone who realizes how the script is designed, is able to craft an HTTP request which sets the logon user arbitrarily.
+
+
+
+
+
+\section{Exploiting ambiguous or dual use of same session variable}
+
+Alla Bezroutchko discusses a scenario where \$\_SESSION['login'] is used for two different purposes.
+
+\begin{compactitem}
+\item In the login scripts, the session variable stores "This user is logged on".
+\item In the password reset scripts, the session variable stores "this user wants his password reset".
+
+\end{compactitem}
+
+
+A race condition was demonstrated, in which the reset scripts could be exploited to change the logged on user arbitrarily.
+
+
+
+
+
+\section{Exploiting scripts allowing writes to arbitrary session variables}
+
+
+/someone discusses examples observed in development forums, which allows writing to arbitrary session variables.
+
+The first example is
+
+\begin{lstlisting}[language=PHP]
+$var = $_GET["something"]; 
+$_SESSION["$var"] = $var2; 
+\end{lstlisting}
+
+(in which \$\_GET["something"] is probably from a selection box or similar).
+
+
+Attack becomes
+
+\begin{lstlisting}[language=bash]
+vulnerable.php?something=SESSION_VAR_TO_POISON
+\end{lstlisting}
+
+
+
+
+\subsection{Session poisoning attacks enabled by php.ini: register\_globals = on}
+
+
+php.ini: register\_globals = on is known to enable security vulnerabilities in several applications. PHP server administrators are recommended to disable this feature.
+
+Note: Real-world examples of session poisoning in enabled by register\_globals = on was publicly demonstrated in back in July 2001 article Serious security hole in Mambo Site Server version 3.0.X.
+
+Second example by /someone is
+
+
+\begin{lstlisting}[language=PHP]
+if ($condition1) { 
+$var = 'SOMETHING'; 
+}; 
+if ($condition2) { 
+$var = 'OTHER'; 
+}; 
+$_SESSION["$var"] = $var2; 
+\end{lstlisting}
+
+which is vulnerable if:
+
+\begin{compactitem}
+\item It is possible for attacker to cause both conditions to be false.
+\item php.ini is misconfigured (register\_globals = on), which allows \$var default value to be controlled by GPC (GET, POST, or COOKIE) input.
+
+\end{compactitem}
+
+Attack becomes
+
+\begin{lstlisting}[language=bash]
+vulnerable.php?var=SESSION_VAR_TO_POISON
+\end{lstlisting}
+
+\section{Exploit utilizing a shared PHP server (e.g. shared web hosting)}
+
+unknow of uw-team.org discusses a scenario where attacker and victim shares the same PHP server.
+
+Attack is fairly easy:
+
+\begin{compactitem}
+\item The attacker first visits the victim's page, and e.g. log on.
+\item Attacker then uploads a PHP script to his account, and has it display context of \$\_SESSION (set by victim script).
+\item Attacker determines which variable needs to be changed, uploads a script which sets this variable, executes it.
+\item Attacker visits victim pages to see if anticipated exploit worked.
+\end{compactitem}
+
+
+This attack only requires that victim and attacker share the same PHP server. The attack is not dependent on victim and attacker having the same virtual hostname, as it is trivial for attacker to move the session identifier cookie from one cookie domain to another.
+
+
+
+
+\chapter{Session hijacking}
+
+
+In computer science, session hijacking\cite{session_hijacking}, sometimes also known as cookie hijacking is the exploitation of a valid computer session—sometimes also called a session key—to gain unauthorized access to information or services in a computer system. In particular, it is used to refer to the theft of a magic cookie used to authenticate a user to a remote server. It has particular relevance to web developers, as the HTTP cookies used to maintain a session on many web sites can be easily stolen by an attacker using an intermediary computer or with access to the saved cookies on the victim's computer (see HTTP cookie theft).
+
+A popular method is using source-routed IP packets. This allows a hacker at point A on the network to participate in a conversation between B and C by encouraging the IP packets to pass through its machine.
+
+If source-routing is turned off, the hacker can use "blind" hijacking, whereby it guesses the responses of the two machines. Thus, the hacker can send a command, but can never see the response. However, a common command would be to set a password allowing access from somewhere else on the net.
+
+A hacker can also be "inline" between B and C using a sniffing program to watch the conversation. This is known as a "man-in-the-middle attack".
+
+会话劫持（Session hijacking），是一种网络攻击手段，黑客可以通过破坏已创建的数据流而实现劫持。
+
+会话劫持的技术实现包括：
+
+\begin{compactitem}
+\item 中间人攻击（Man-in-the-Middle Attack，一般简称MITM攻击）
+\item SMB会话劫持
+\end{compactitem}
+
+
+\section{History}
+
+Session hijacking was not possible with early versions HTTP.
+
+HTTP protocol versions 0.8 and 0.9 lacked cookies and other features necessary for session hijacking. Version 0.9beta of Mosaic Netscape, released on October 13, 1994, supported cookies.
+
+Early versions of HTTP 1.0 did have some security weaknesses relating to session hijacking, but they were difficult to exploit due to the vagaries of most early HTTP 1.0 servers and browsers. As HTTP 1.0 has been designated as a fallback for HTTP 1.1 since the early 2000s -- and as HTTP 1.0 servers are all essentially HTTP 1.1 servers the session hijacking problem has evolved into a nearly permanent security risk.
+
+The introduction of supercookies and other features with the modernized HTTP 1.1 has allowed for the hijacking problem to become an ongoing security problem. Webserver and browser state machine standardization has contributed to this ongoing security problem.
+
+
+
+
+
+
+
+
+
+\section{Methods}
+
+
+There are four main methods used to perpetrate a session hijack. These are:
+
+\begin{compactitem}
+\item Session fixation, where the attacker sets a user's session id to one known to him, for example by sending the user an email with a link that contains a particular session id. The attacker now only has to wait until the user logs in.
+
+\item Session sidejacking, where the attacker uses packet sniffing to read network traffic between two parties to steal the session cookie. Many web sites use SSL encryption for login pages to prevent attackers from seeing the password, but do not use encryption for the rest of the site once authenticated. This allows attackers that can read the network traffic to intercept all the data that is submitted to the server or web pages viewed by the client. Since this data includes the session cookie, it allows him to impersonate the victim, even if the password itself is not compromised. Unsecured Wi-Fi hotspots are particularly vulnerable, as anyone sharing the network will generally be able to read most of the web traffic between other nodes and the access point.
+
+Alternatively, an attacker with physical access can simply attempt to steal the session key by, for example, obtaining the file or memory contents of the appropriate part of either the user's computer or the server.
+
+\item Cross-site scripting, where the attacker tricks the user's computer into running code which is treated as trustworthy because it appears to belong to the server, allowing the attacker to obtain a copy of the cookie or perform other operations.
+
+\end{compactitem}
+
+
+
+
+
+
+
+
+
+\section{Prevention}
+
+
+Methods to prevent session hijacking include:
+
+\begin{compactitem}
+\item Encryption of the data traffic passed between the parties; in particular the session key, though ideally all traffic for the entire session[2] by using SSL/TLS. This technique is widely relied-upon by web-based banks and other e-commerce services, because it completely prevents sniffing-style attacks. However, it could still be possible to perform some other kind of session hijack. In response, scientists from the Radboud University Nijmegen proposed in 2013 a way to prevent session hijacking by correlating the application session with the SSL/TLS credentials.
+
+\item Use of a long random number or string as the session key. This reduces the risk that an attacker could simply guess a valid session key through trial and error or brute force attacks.
+Regenerating the session id after a successful login. This prevents session fixation because the attacker does not know the session id of the user after s/he has logged in.
+
+\item Some services make secondary checks against the identity of the user. For example, a web server could check with each request made that the IP address of the user matched the one last used during that session. This does not prevent attacks by somebody who shares the same IP address, however, and could be frustrating for users whose IP address is liable to change during a browsing session.
+
+\item Alternatively, some services will change the value of the cookie with each and every request. This dramatically reduces the window in which an attacker can operate and makes it easy to identify whether an attack has taken place, but can cause other technical problems (for example, two legitimate, closely timed requests from the same client can lead to a token check error on the server).
+
+\item Users may also wish to log out of websites whenever they are finished using them. However this will not protect against attacks such as Firesheep.
+
+\end{compactitem}
+
+
+
+
+
+\section{Exploits}
+
+
+
+
+\subsection{Firesheep}
+
+
+In October 2010, a Mozilla Firefox extension called Firesheep has exploited and made it easy for users of unencrypted public Wi-Fi to be attacked by session hijackers. Websites like Facebook, Twitter, and any that the user adds to their preferences allow the Firesheep user to easily access private information from cookies and threaten the public Wi-Fi users personal property. Only months later, Facebook and Twitter responded by offering (and later requiring) HTTP Secure throughout.
+
+
+
+
+
+
+\subsection{WhatsApp sniffer}
+
+An app named "WhatsApp Sniffer" was made available on Google Play in May 2012, able to display messages from other WhatsApp users connected to the same network as the app user. WhatsApp uses an XMPP infrastructure with unencrypted, plain-text communication.
+
+
+
+
+
+\subsection{DroidSheep}
+
+DroidSheep is a simple Android tool for web session hijacking (sidejacking). It listens for HTTP packets sent via a wireless (802.11) network connection and extracts the session id from these packets in order to reuse them. DroidSheep can capture sessions using the libpcap library and supports: OPEN Networks, WEP encrypted networks, and WPA/WPA2 encrypted networks (PSK only) This software uses libpcap and arpspoof. The apk was made available on Google Play but it has been taken down by Google. The source is available here
+
+
+
+
+
+\subsection{CookieCadger}
+
+
+CookieCadger is a Java app that automates sidejacking and replay of insecure HTTP GET requests. Cookie Cadger helps identify information leakage from applications that utilize insecure HTTP GET requests. Web providers have started stepping up to the plate since Firesheep was released in 2010. Today, most major websites can provide SSL/TLS during all transactions, preventing cookie data from leaking over wired Ethernet or insecure Wi-Fi. Cookie Cadger is the first open-source pen-testing tool ever made for intercepting and replaying specific insecure HTTP GET requests into a browser. Cookie Cadger is a graphical utility which harnesses the power of the Wireshark suite and Java to provide a fully cross-platform, entirely open-source utility which can monitor wired Ethernet, insecure Wi-Fi, or load a packet capture file for offline analysis. Cookie Cadger has been used to highlight the weaknesses of youth team sharing sites such as Shutterfly (used by AYSO soccer league) and TeamSnap. The binary and source can be downloaded here
+
+
+
+
+\clearpage
+
+\bibliographystyle{plainnat}
+\bibliography{httpnotes}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
